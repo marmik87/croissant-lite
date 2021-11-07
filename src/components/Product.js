@@ -9,14 +9,7 @@ import {
   Row,
 } from './StyledComponents'
 
-import { imageApiUrl } from '../utils/api'
-
-type ProductType = {
-  imgPath: string,
-  price: { full: number, currency: string },
-  productId: number,
-  productName: string,
-}
+import { imageApiUrl, type ProductType } from '../utils/utils'
 
 type Props = {
   addToCart: Function,

@@ -16,6 +16,7 @@ import CounterWrap from './CounterWrap'
 type Props = {
   cart: Array,
   emptyWholeCart: Function,
+  isEmpty: boolean,
   messages: Object,
   removeFromCart: Function,
   showCart: boolean,
@@ -26,19 +27,21 @@ type Props = {
 const CartView = ({
   cart = [],
   emptyWholeCart,
+  isEmpty = true,
   messages,
   removeFromCart,
   showCart,
   totalPrice = 0,
   updateCart,
 }: Props) => {
-  const isNotEmpty = cart.length !== 0
 
   return (
     <CartWrapper isShown={showCart}>
       <div>
         <SecondaryHeading>{messages.cartReview.title}</SecondaryHeading>
-        {isNotEmpty ? (
+        {isEmpty ? (
+          <TextComponent>{messages.cartReview.emptyCart}</TextComponent>
+        ) : (
           <>
             {cart.map((item) => (
               <CartItem key={item.productId}>
@@ -60,8 +63,6 @@ const CartView = ({
               {messages.cartReview.removeAllItems}
             </DeleteButton>
           </>
-        ) : (
-          <TextComponent>{messages.cartReview.emptyCart}</TextComponent>
         )}
       </div>
     </CartWrapper>

@@ -14,3 +14,17 @@ export const parseMessagesResponse = (data: object) => {
 
   return responseMessages
 }
+
+export type Item = {
+  name: string,
+  price: { full: number, whole: number, fraction: number, currency: string },
+  productId: number,
+  qty: number,
+}
+
+export type ProductType = {
+  imgPath: string,
+  price: { full: number, currency: string },
+  productId: number,
+  productName: string,
+}

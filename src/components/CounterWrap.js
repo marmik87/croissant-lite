@@ -1,13 +1,7 @@
 //Flow
 import React from 'react'
+import { type Item } from '../utils/utils'
 import { AddIcon, Button, RemoveIcon, Row } from './StyledComponents'
-
-type Item = {
-  name: string,
-  price: { full: number, whole: number, fraction: number, currency: string },
-  productId: number,
-  qty: number,
-}
 
 type Props = {
   messages: Object,

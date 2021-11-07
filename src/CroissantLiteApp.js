@@ -1,27 +1,20 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import axios from 'axios'
-import Theme from './constants/theme'
-import { Container, ProductListWrapper} from './components/StyledComponents'
+import { Container, ProductListWrapper } from './components/StyledComponents'
 import CartView from './components/CartView'
 import MenuBar from './components/MenuBar'
 import Product from './components/Product'
-import { parseProductsResponse, parseMessagesResponse } from './utils/api'
+import { parseProductsResponse, parseMessagesResponse } from './utils/utils'
 
 import textace from './mocks/textace.json'
 
 const CroissantLite = () => {
   const [loading, setLoading] = useState(true)
-
   const [products, setProducts] = useState([])
-
   const [messages, setMessages] = useState()
-
   const [cart, handleCart] = useState([])
-
   const [query, getQuery] = useState('')
-
   const [searchResults, setSearchResults] = useState([])
-
   const [isCartShown, setIsCartShown] = useState(false)
 
   const updateCart = (item: object, count: number) => {
@@ -49,7 +42,7 @@ const CroissantLite = () => {
 
   const emptyWholeCart = () => handleCart([])
 
-  const handleChange = (event) => {
+  const handleChange = (event: any) => {
     getQuery(event.target.value)
   }
 
@@ -58,6 +51,8 @@ const CroissantLite = () => {
     .reduce((a, b) => a + b, 0)
     .toFixed(2)
 
+
+  // fetching producst, setting messages and setting cart from local storage (exists)
   const fetchData = () => {
     setLoading(true)
     axios.get('products.json').then((response) => {
@@ -80,51 +75,50 @@ const CroissantLite = () => {
     fetchData()
   }, [])
 
+  // setting cart to localStorage
   useEffect(() => {
     localStorage.setItem('croissantCartStorage', JSON.stringify(cart))
   }, [cart])
 
+  // calling setting result only when the query is changed
   useMemo(() => {
     setSearchResults(products.filter((item) => item.productName.toLowerCase().includes(query)))
   }, [query, products])
 
-  console.log(loading)
-
   return (
-    <Theme>
-      <Container>
-        <MenuBar
-          searchedProduct={query}
-          handleChange={handleChange}
-          showCart={isCartShown}
-          toggleCartShow={setIsCartShown}
-        />
-        {!loading && (
-          <>
-            <ProductListWrapper isShown={isCartShown}>
-              {searchResults &&
-                searchResults.map((item) => (
-                  <Product
-                    key={item.productId}
-                    productData={item}
-                    messages={messages}
-                    addToCart={updateCart}
-                  />
-                ))}
-            </ProductListWrapper>
-            <CartView
-              cart={cart}
-              messages={messages}
-              removeFromCart={removeAllFromCart}
-              updateCart={updateCart}
-              totalPrice={totalPrice}
-              showCart={isCartShown}
-              emptyWholeCart={emptyWholeCart}
-            />
-          </>
-        )}
-      </Container>
-    </Theme>
+    <Container>
+      <MenuBar
+        searchedProduct={query}
+        handleChange={handleChange}
+        showCart={isCartShown}
+        toggleCartShow={setIsCartShown}
+      />
+      {!loading && (
+        <>
+          <ProductListWrapper isShown={isCartShown}>
+            {searchResults &&
+              searchResults.map((item) => (
+                <Product
+                  key={item.productId}
+                  productData={item}
+                  messages={messages}
+                  addToCart={updateCart}
+                />
+              ))}
+          </ProductListWrapper>
+          <CartView
+            cart={cart}
+            isEmpty={!cart.length}
+            messages={messages}
+            removeFromCart={removeAllFromCart}
+            updateCart={updateCart}
+            totalPrice={totalPrice}
+            showCart={isCartShown}
+            emptyWholeCart={emptyWholeCart}
+          />
+        </>
+      )}
+    </Container>
   )
 }
 
