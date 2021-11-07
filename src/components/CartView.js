@@ -9,6 +9,7 @@ import {
   SecondaryHeading,
   TextComponent,
 } from './StyledComponents'
+import { messages } from '../mocks/messages'
 
 import CounterWrap from './CounterWrap'
 
@@ -16,7 +17,6 @@ type Props = {
   cart: Array,
   emptyWholeCart: Function,
   isEmpty: boolean,
-  messages: Object,
   removeFromCart: Function,
   showCart: boolean,
   totalPrice: number,
@@ -27,19 +27,17 @@ const CartView = ({
   cart = [],
   emptyWholeCart,
   isEmpty = true,
-  messages,
   removeFromCart,
   showCart,
   totalPrice = 0,
   updateCart,
 }: Props) => {
-
   return (
     <CartWrapper isShown={showCart}>
       <div>
-        <SecondaryHeading>Přehled objednávky</SecondaryHeading>
+        <SecondaryHeading>{messages.cartReview.title}</SecondaryHeading>
         {isEmpty ? (
-          <TextComponent>Váš košík je prázdný</TextComponent>
+          <TextComponent>{messages.cartReview.emptyCart}</TextComponent>
         ) : (
           <>
             {cart.map((item) => (

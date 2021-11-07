@@ -33,34 +33,42 @@ export const ShoppingCartIcon = styled(ShoppingCart)`
     display: none;
   }
 `
-
 /** Wrappers */
 export const Container = styled.div`
   color: black;
   text-align: center;
   display: grid;
-  gap: 1rem;
-  grid-auto-rows: 150px;
   justify-content: center;
-
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 4fr 1fr;
+  grid-template-areas:
+    'MenuBar MenuBar'
+    'ProductListWrapper CartView';
 
   @media (max-width: ${theme.size.tablet}) {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'MenuBar'
+      'ProductListWrapper'
+      'CartView';
   }
 `
 export const ProductListWrapper = styled.div`
   padding: 1rem;
   display: grid;
   grid-gap: 10px;
-
-  grid-column: 1 / span 4;
+  grid-area: ProductListWrapper;
   grid-template-columns: repeat(4, 1fr);
 
+  @media (max-width: ${theme.size.laptop}) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
   @media (max-width: ${theme.size.tablet}) {
-    grid-column: 1 / span 2;
     grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: ${theme.size.mobile}) {
+    grid-template-columns: 1fr;
   }
 
   ${({ isShown }) =>
@@ -71,24 +79,21 @@ export const ProductListWrapper = styled.div`
 export const Navbar = styled.div`
   background: ${theme.colors.primaryGreen};
   padding: 0.25rem;
-  grid-column: 1 / span 2;
   display: flex;
-
-  @media (min-width: ${theme.size.laptop}) {
-    grid-column: 1 / span 5;
-  }
+  grid-area: MenuBar;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 `
 export const CartWrapper = styled.div`
   padding: 1rem;
-  grid-row: span all;
-  display: flex;
+  grid-area: CartView;
 
   @media (max-width: ${theme.size.tablet}) {
     display: block;
     background-color: white;
-    grid-column: 1 / span 2;
     grid-row: -1;
-    display: table;
+
     ${({ isShown }) =>
       !isShown &&
       `display: none;

@@ -7,16 +7,15 @@ import {
   TextComponent,
   Row,
 } from './StyledComponents'
-
+import { messages } from '../mocks/messages'
 import { imageApiUrl, type ProductType } from '../utils/utils'
 
 type Props = {
   addToCart: Function,
-  messages: Object,
   productData: ProductType,
 }
 
-const Product = ({ productData, messages, addToCart }: Props) => {
+const Product = ({ productData, addToCart }: Props) => {
   const formattedPrice = productData.price.full.toFixed(2)
   return (
     <ProductItem>

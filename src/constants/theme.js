@@ -3,8 +3,10 @@ import { ThemeProvider } from 'styled-components'
 
 export const theme = {
   size: {
+    mobile: '576px',
     tablet: '768px',
-    laptop: '1024px',
+    laptop: '992px',
+    desktop: '1024px',
   },
   fontSizes: {
     small: '12px',

@@ -1,32 +1,25 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import axios from 'axios'
 import { Container, ProductListWrapper } from './components/StyledComponents'
 import CartView from './components/CartView'
 import MenuBar from './components/MenuBar'
 import Product from './components/Product'
-import {
-  parseProductsResponse,
-  parseMessagesResponse,
-  type Item,
-  REQUEST_SETTINGS,
-} from './utils/utils'
-
-import textace from './mocks/textace.json'
+import { parseProductsResponse, type Item, REQUEST_SETTINGS } from './utils/utils'
 
 const CroissantLite = () => {
   const [products, setProducts] = useState([])
-  const [messages, setMessages] = useState()
   const [cart, setCart] = useState([])
   const [query, setQuery] = useState('')
   const [isCartShown, setIsCartShown] = useState(false)
 
+  // useMemo used for component, maintain single function
   const updateCart = (item: Item, count: number) => {
     const itemFound = cart.find(({ productId }) => productId === item.productId)
 
     if (itemFound) {
       itemFound.qty += count
-      if (itemFound.qty === 0) {
-        return removeAllFromCart(item.productId)
+      if (itemFound.qty < 1) {
+        return removeAllItemsFromCart(item.productId)
       }
       return setCart([...cart])
     }
@@ -37,17 +30,27 @@ const CroissantLite = () => {
     ])
   }
 
-  const removeAllFromCart = (cartItemId: number) => {
+  // useMemo used for component, maintain single function
+  const removeAllItemsFromCart = (cartItemId: number) => {
     const filtered = cart.filter(({ productId }) => productId !== cartItemId)
 
     return setCart([...filtered])
   }
 
-  const emptyWholeCart = () => setCart([])
+  const emptyWholeCart = useCallback((event: any) => {
+    setCart([])
+  }, [])
 
-  const handleChange = (event: any) => {
+  const handleChange = useCallback((event: any) => {
     setQuery(event.target.value)
-  }
+  }, [])
+
+  const toggleShow = useCallback(
+    (event: any) => {
+      setIsCartShown(!isCartShown)
+    },
+    [isCartShown]
+  )
 
   const totalPrice = useMemo(() => {
     return cart
@@ -61,15 +64,14 @@ const CroissantLite = () => {
     async function fetchData() {
       axios
         .get(REQUEST_SETTINGS.productsFile)
+        // TODO: handle response status codes
         .then((response) => {
           const productsFromResponse = parseProductsResponse(response)
           setProducts(productsFromResponse)
         })
         .catch((error) => {
-          console.log('Nepodarilo se stahnout data')
+          console.error(error)
         })
-
-      setMessages(parseMessagesResponse(textace))
 
       const savedLocalCart = localStorage.getItem(REQUEST_SETTINGS.localStorageName)
 
@@ -104,23 +106,17 @@ const CroissantLite = () => {
         searchedProduct={query}
         handleChange={handleChange}
         showCart={isCartShown}
-        toggleCartShow={setIsCartShown}
+        toggleCartShow={toggleShow}
       />
       <ProductListWrapper isShown={isCartShown}>
         {searchResults.map((item) => (
-          <Product
-            key={item.productId}
-            productData={item}
-            messages={messages}
-            addToCart={updateCart}
-          />
+          <Product key={item.productId} productData={item} addToCart={updateCart} />
         ))}
       </ProductListWrapper>
       <CartView
         cart={cart}
         isEmpty={!cart.length}
-        messages={messages}
-        removeFromCart={removeAllFromCart}
+        removeFromCart={removeAllItemsFromCart}
         updateCart={updateCart}
         totalPrice={totalPrice}
         showCart={isCartShown}

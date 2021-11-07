@@ -9,40 +9,35 @@ import {
   Row,
 } from './StyledComponents'
 import croissant from '../assets/croissant.svg'
+import { messages } from '../mocks/messages'
 
 type Props = {
   handleChange: Function,
   searchedProduct: string,
-  showCart: boolean,
   toggleCartShow: Function,
 }
 
-const MenuBar = ({
-  handleChange,
-  searchedProduct = '',
-  showCart = false,
-  toggleCartShow,
-}: Props) => {
-  return (
-    <Navbar>
-      <Row nav>
-        <AppLogo src={croissant} alt="Logo of Croissant Lite App"></AppLogo>
-        <Heading>Croissant Lite</Heading>
-      </Row>
-      <Row nav>
+const MenuBar = ({ handleChange, searchedProduct = '', toggleCartShow }: Props) => (
+  <Navbar>
+    <Row nav>
+      <AppLogo src={croissant} alt={messages.logoAriaLabel}></AppLogo>
+      <Heading>{messages.appName}</Heading>
+    </Row>
+    <Row nav>
+      <label>
         <SearchIcon />
         <SearchInput
           type="text"
-          placeholder="Vyhledat produkt"
+          placeholder={messages.cartReview.searchPlaceholder}
           value={searchedProduct}
           onChange={handleChange}
         />
-      </Row>
-      <Row nav>
-        <ShoppingCartIcon onClick={() => toggleCartShow(!showCart)} />
-      </Row>
-    </Navbar>
-  )
-}
+      </label>
+    </Row>
+    <Row nav>
+      <ShoppingCartIcon onClick={toggleCartShow} />
+    </Row>
+  </Navbar>
+)
 
 export default MenuBar

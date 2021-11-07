@@ -1,14 +1,14 @@
 import React from 'react'
 import { type Item } from '../utils/utils'
 import { AddIcon, Button, RemoveIcon, Row } from './StyledComponents'
+import { messages } from '../mocks/messages'
 
 type Props = {
-  messages: Object,
   item: Item,
   updateCart: Function,
 }
 
-const CounterWrap = ({ messages, item, updateCart }: Props) => {
+const CounterWrap = ({ item, updateCart }: Props) => {
   return (
     <Row>
       <Button
