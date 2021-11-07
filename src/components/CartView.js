@@ -1,59 +1,69 @@
+//Flow
+import React from 'react'
 import {
+  CartItem,
+  CartItemName,
   CartWrapper,
-  CartList,
-  CartButton,
-  CartDeleteButton,
+  DeleteButton,
   DeleteIcon,
   Row,
-  CartItem,
-  CartHeading,
-  CartItemName
+  SecondaryHeading,
+  TextComponent,
 } from './StyledComponents'
 
-const CartView = ({ cart, removeFromCart, totalPrice = 0, updateCart, messages }: Props) => {
-  const isEmpty = cart.length === 0
+import CounterWrap from './CounterWrap'
+
+type Props = {
+  cart: Array,
+  emptyWholeCart: Function,
+  messages: Object,
+  removeFromCart: Function,
+  showCart: boolean,
+  totalPrice: number,
+  updateCart: Function,
+}
+
+const CartView = ({
+  cart = [],
+  emptyWholeCart,
+  messages,
+  removeFromCart,
+  showCart,
+  totalPrice = 0,
+  updateCart,
+}: Props) => {
+  const isNotEmpty = cart.length !== 0
 
   return (
-    <CartWrapper>
-      <CartList>
-        {!isEmpty && (
+    <CartWrapper isShown={showCart}>
+      <div>
+        <SecondaryHeading>{messages.cartReview.title}</SecondaryHeading>
+        {isNotEmpty ? (
           <>
-            <CartHeading>{messages.cartReview.title}</CartHeading>
             {cart.map((item) => (
               <CartItem key={item.productId}>
                 <Row>
                   <CartItemName>{item.name}</CartItemName>
-                  <CartDeleteButton
+                  <DeleteButton
                     aria-label={`${messages.cartReview.removeFromCartBtn} ${item.name}`}
                     onClick={() => removeFromCart(item.productId)}>
                     <DeleteIcon />
-                  </CartDeleteButton>
+                  </DeleteButton>
                 </Row>
-                <Row>
-                  <CartButton
-                    aria-label={`${messages.amountCounter.removePiece} ${item.name}`}
-                    onClick={() => updateCart(item, -1)}>
-                    {' '}
-                    -{' '}
-                  </CartButton>
-                  <span>{item.qty}</span>
-                  <CartButton
-                    aria-label={`${messages.amountCounter.addPiece} ${item.name}`}
-                    onClick={() => updateCart(item, 1)}>
-                    {' '}
-                    +{' '}
-                  </CartButton>
-                </Row>
+                <CounterWrap item={item} messages={messages} updateCart={updateCart} />
               </CartItem>
             ))}
-
-            <div>
-              {messages.cartReview.totalPrice} {totalPrice}
-            </div>
+            <SecondaryHeading>
+              {messages.cartReview.totalPrice} {totalPrice} {messages.cartReview.currency}
+            </SecondaryHeading>
+            <DeleteButton deleteAll onClick={emptyWholeCart}>
+              {messages.cartReview.removeAllItems}
+            </DeleteButton>
           </>
+        ) : (
+          <TextComponent>{messages.cartReview.emptyCart}</TextComponent>
         )}
-        {isEmpty && <CartHeading>košík je prázdný</CartHeading>}
-      </CartList>
+      </div>
     </CartWrapper>
   )
 }

@@ -1,21 +1,47 @@
+//Flow
 import React from 'react'
-import { Navbar, NavbarItem, Heading, AppLogo } from './StyledComponents'
+import {
+  AppLogo,
+  Heading,
+  Navbar,
+  SearchInput,
+  SearchIcon,
+  ShoppingCartIcon,
+  Row,
+} from './StyledComponents'
 import croissant from '../assets/croissant.svg'
 
-const MenuBar = ({ searchedProduct, handleChange }: Props) => {
+type Props = {
+  handleChange: Function,
+  searchedProduct: string,
+  showCart: boolean,
+  toggleCartShow: Function,
+}
+
+const MenuBar = ({
+  handleChange,
+  searchedProduct = '',
+  showCart = false,
+  toggleCartShow,
+}: Props) => {
   return (
     <Navbar>
-      <NavbarItem>
+      <Row nav>
         <AppLogo src={croissant} alt="Logo of Croissant Lite App"></AppLogo>
         <Heading>Croissant Lite</Heading>
-      </NavbarItem>
-      <NavbarItem>
-        <input
+      </Row>
+      <Row nav>
+        <SearchIcon />
+        <SearchInput
           type="text"
-          placeholder="Search"
+          placeholder="Vyhledat produkt"
           value={searchedProduct}
-          onChange={handleChange}></input>
-      </NavbarItem>
+          onChange={handleChange}
+        />
+      </Row>
+      <Row nav>
+        <ShoppingCartIcon onClick={() => toggleCartShow(!showCart)} />
+      </Row>
     </Navbar>
   )
 }

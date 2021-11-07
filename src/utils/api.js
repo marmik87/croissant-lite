@@ -1,13 +1,10 @@
-import axios from 'axios'
+//Flow
 
-export const imageApiUrl = 'https://cdn.rohlik.cz'
+export const imageApiUrl =
+  'https://www.rohlik.cz/cdn-cgi/image/f=auto,w=300,h=300/https://cdn.rohlik.cz'
 
-export const getResponse = async (url: String, requestParams: any) => {
-  console.log('working hard today')
-}
-
-export const parseProductsResponse = (data: object) => {
-  const responseData = data.data.categories
+export const parseProductsResponse = (response: object) => {
+  const responseData = response.data.data.categories
 
   return responseData
 }

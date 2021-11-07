@@ -1,41 +1,49 @@
 // Flow
 import React from 'react'
 import {
-  CartButton,
-  ImageWrapper,
+  Button,
   ProductImage,
   ProductItem,
-  ProductName,
   ProductPrice,
+  TextComponent,
+  Row,
 } from './StyledComponents'
 
 import { imageApiUrl } from '../utils/api'
 
-type PriceType = {
-  full: number,
-  currency: string,
-}
-
 type ProductType = {
+  imgPath: string,
+  price: { full: number, currency: string },
   productId: number,
   productName: string,
-  price: Array<PriceType>,
-  salePrice: number,
+}
+
+type Props = {
+  addToCart: Function,
+  messages: Object,
+  productData: ProductType,
 }
 
 const Product = ({ productData, messages, addToCart }: Props) => {
+  const formattedPrice = productData.price.full.toFixed(2)
   return (
     <ProductItem>
-      <ImageWrapper>
-        <ProductImage src={`${imageApiUrl}${productData.imgPath}`} alt={productData.productName} />
-      </ImageWrapper>
-      <ProductName>{productData.productName}</ProductName>
+      <Row>
+        <ProductImage
+          loading="lazy"
+          src={`${imageApiUrl}${productData.imgPath}`}
+          alt={productData.productName}
+          width="300"
+          height="300"
+        />
+      </Row>
+      <TextComponent>{productData.productName}</TextComponent>
       <ProductPrice>
-        {productData.price.full} {productData.price.currency}
+        {formattedPrice} {productData.price.currency}
       </ProductPrice>
-      <CartButton inList onClick={() => addToCart(productData, 1)}>
+      <Button inList onClick={() => addToCart(productData, 1)}>
         {messages.amountCounter.addToCart}
-      </CartButton>
+      </Button>
     </ProductItem>
   )
 }
