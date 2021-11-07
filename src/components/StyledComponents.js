@@ -1,4 +1,3 @@
-// Flow
 import styled from 'styled-components'
 import { theme } from '../constants/theme'
 import { Minus, Plus, Search, ShoppingCart, Trash } from '@styled-icons/fa-solid'

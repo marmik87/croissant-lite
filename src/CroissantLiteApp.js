@@ -4,20 +4,23 @@ import { Container, ProductListWrapper } from './components/StyledComponents'
 import CartView from './components/CartView'
 import MenuBar from './components/MenuBar'
 import Product from './components/Product'
-import { parseProductsResponse, parseMessagesResponse } from './utils/utils'
+import {
+  parseProductsResponse,
+  parseMessagesResponse,
+  type Item,
+  REQUEST_SETTINGS,
+} from './utils/utils'
 
 import textace from './mocks/textace.json'
 
 const CroissantLite = () => {
-  const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState([])
   const [messages, setMessages] = useState()
-  const [cart, handleCart] = useState([])
-  const [query, getQuery] = useState('')
-  const [searchResults, setSearchResults] = useState([])
+  const [cart, setCart] = useState([])
+  const [query, setQuery] = useState('')
   const [isCartShown, setIsCartShown] = useState(false)
 
-  const updateCart = (item: object, count: number) => {
+  const updateCart = (item: Item, count: number) => {
     const itemFound = cart.find(({ productId }) => productId === item.productId)
 
     if (itemFound) {
@@ -25,64 +28,74 @@ const CroissantLite = () => {
       if (itemFound.qty === 0) {
         return removeAllFromCart(item.productId)
       }
-      return handleCart([...cart])
+      return setCart([...cart])
     }
 
-    return handleCart([
+    return setCart([
       ...cart,
-      { productId: item.productId, name: item.productName, price: item.price, qty: 1 },
+      { productId: item.productId, productName: item.productName, price: item.price, qty: 1 },
     ])
   }
 
   const removeAllFromCart = (cartItemId: number) => {
     const filtered = cart.filter(({ productId }) => productId !== cartItemId)
 
-    return handleCart([...filtered])
+    return setCart([...filtered])
   }
 
-  const emptyWholeCart = () => handleCart([])
+  const emptyWholeCart = () => setCart([])
 
   const handleChange = (event: any) => {
-    getQuery(event.target.value)
+    setQuery(event.target.value)
   }
 
-  const totalPrice: number = cart
-    .map((item) => item.price.full * item.qty)
-    .reduce((a, b) => a + b, 0)
-    .toFixed(2)
+  const totalPrice = useMemo(() => {
+    return cart
+      .map((item) => item.price.full * item.qty)
+      .reduce((a, b) => a + b, 0)
+      .toFixed(2)
+  }, [cart])
 
+  // fetching producst, setting messages and setting cart from local storage (if exists)
+  useEffect(() => {
+    async function fetchData() {
+      axios
+        .get(REQUEST_SETTINGS.productsFile)
+        .then((response) => {
+          const productsFromResponse = parseProductsResponse(response)
+          setProducts(productsFromResponse)
+        })
+        .catch((error) => {
+          console.log('Nepodarilo se stahnout data')
+        })
 
-  // fetching producst, setting messages and setting cart from local storage (exists)
-  const fetchData = () => {
-    setLoading(true)
-    axios.get('products.json').then((response) => {
-      const productsFromResponse = parseProductsResponse(response)
-      setProducts(productsFromResponse)
-    })
+      setMessages(parseMessagesResponse(textace))
 
-    setMessages(parseMessagesResponse(textace))
+      const savedLocalCart = localStorage.getItem(REQUEST_SETTINGS.localStorageName)
 
-    const savedLocalCart = localStorage.getItem('croissantCartStorage')
-    if (savedLocalCart) {
-      handleCart(JSON.parse(savedLocalCart))
+      if (savedLocalCart) {
+        setCart(JSON.parse(savedLocalCart))
+      }
     }
 
-    setLoading(false)
-  }
-
-  // how to handle synchro between 2 opened tabs without any other action
-  useEffect(() => {
     fetchData()
   }, [])
 
   // setting cart to localStorage
   useEffect(() => {
-    localStorage.setItem('croissantCartStorage', JSON.stringify(cart))
+    localStorage.setItem(REQUEST_SETTINGS.localStorageName, JSON.stringify(cart))
   }, [cart])
 
   // calling setting result only when the query is changed
-  useMemo(() => {
-    setSearchResults(products.filter((item) => item.productName.toLowerCase().includes(query)))
+  const searchResults = useMemo(() => {
+    if (!products) {
+      return []
+    }
+    if (!query) {
+      return products
+    }
+
+    return products.filter((item) => item.productName.toLowerCase().includes(query))
   }, [query, products])
 
   return (
@@ -93,31 +106,26 @@ const CroissantLite = () => {
         showCart={isCartShown}
         toggleCartShow={setIsCartShown}
       />
-      {!loading && (
-        <>
-          <ProductListWrapper isShown={isCartShown}>
-            {searchResults &&
-              searchResults.map((item) => (
-                <Product
-                  key={item.productId}
-                  productData={item}
-                  messages={messages}
-                  addToCart={updateCart}
-                />
-              ))}
-          </ProductListWrapper>
-          <CartView
-            cart={cart}
-            isEmpty={!cart.length}
+      <ProductListWrapper isShown={isCartShown}>
+        {searchResults.map((item) => (
+          <Product
+            key={item.productId}
+            productData={item}
             messages={messages}
-            removeFromCart={removeAllFromCart}
-            updateCart={updateCart}
-            totalPrice={totalPrice}
-            showCart={isCartShown}
-            emptyWholeCart={emptyWholeCart}
+            addToCart={updateCart}
           />
-        </>
-      )}
+        ))}
+      </ProductListWrapper>
+      <CartView
+        cart={cart}
+        isEmpty={!cart.length}
+        messages={messages}
+        removeFromCart={removeAllFromCart}
+        updateCart={updateCart}
+        totalPrice={totalPrice}
+        showCart={isCartShown}
+        emptyWholeCart={emptyWholeCart}
+      />
     </Container>
   )
 }

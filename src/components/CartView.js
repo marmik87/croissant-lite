@@ -1,4 +1,3 @@
-//Flow
 import React from 'react'
 import {
   CartItem,
@@ -38,15 +37,15 @@ const CartView = ({
   return (
     <CartWrapper isShown={showCart}>
       <div>
-        <SecondaryHeading>{messages.cartReview.title}</SecondaryHeading>
+        <SecondaryHeading>Přehled objednávky</SecondaryHeading>
         {isEmpty ? (
-          <TextComponent>{messages.cartReview.emptyCart}</TextComponent>
+          <TextComponent>Váš košík je prázdný</TextComponent>
         ) : (
           <>
             {cart.map((item) => (
               <CartItem key={item.productId}>
                 <Row>
-                  <CartItemName>{item.name}</CartItemName>
+                  <CartItemName>{item.productName}</CartItemName>
                   <DeleteButton
                     aria-label={`${messages.cartReview.removeFromCartBtn} ${item.name}`}
                     onClick={() => removeFromCart(item.productId)}>

@@ -1,4 +1,3 @@
-//Flow
 import React from 'react'
 import { type Item } from '../utils/utils'
 import { AddIcon, Button, RemoveIcon, Row } from './StyledComponents'
