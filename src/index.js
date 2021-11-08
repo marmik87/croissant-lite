@@ -2,14 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import CroissantLite from './CroissantLiteApp'
-import { ErrorBoundary } from './components/ErrorBoundary'
 import reportWebVitals from './reportWebVitals'
 
 ReactDOM.render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <CroissantLite />
-    </ErrorBoundary>
+    <CroissantLite />
   </React.StrictMode>,
   document.getElementById('root')
 )

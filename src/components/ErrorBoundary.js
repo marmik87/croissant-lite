@@ -21,11 +21,6 @@ export class ErrorBoundary extends React.Component {
       return (
         <div>
           <h2>Aplikace je momentálně nedostupná</h2>
-          <details>
-            {this.state.error && this.state.error.toString()}
-            <br />
-            {this.state.errorInfo.componentStack}
-          </details>
         </div>
       )
     }

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import axios from 'axios'
 import { Container, ProductListWrapper } from './components/StyledComponents'
 import CartView from './components/CartView'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import MenuBar from './components/MenuBar'
 import Product from './components/Product'
 import { parseProductsResponse, type Item, REQUEST_SETTINGS } from './utils/utils'
@@ -106,26 +107,28 @@ const CroissantLite = () => {
         showCart={isCartShown}
         toggleCartShow={toggleShow}
       />
-      <ProductListWrapper data-testid="productListWrapper" isShown={isCartShown}>
-        {searchResults.map((item) => (
-          <Product
-            data-testId="productItemWrapper"
-            key={item.productId}
-            productData={item}
-            addToCart={updateCart}
-          />
-        ))}
-      </ProductListWrapper>
-      <CartView
-        data-testid="cartView"
-        cart={cart}
-        isEmpty={!cart.length}
-        removeFromCart={removeAllItemsFromCart}
-        updateCart={updateCart}
-        totalPrice={totalPrice}
-        showCart={isCartShown}
-        emptyWholeCart={emptyWholeCart}
-      />
+      <ErrorBoundary>
+        <ProductListWrapper data-testid="productListWrapper" isShown={isCartShown}>
+          {searchResults.map((item) => (
+            <Product
+              data-testId="productItemWrapper"
+              key={item.productId}
+              productData={item}
+              addToCart={updateCart}
+            />
+          ))}
+        </ProductListWrapper>
+        <CartView
+          data-testid="cartView"
+          cart={cart}
+          isEmpty={!cart.length}
+          removeFromCart={removeAllItemsFromCart}
+          updateCart={updateCart}
+          totalPrice={totalPrice}
+          showCart={isCartShown}
+          emptyWholeCart={emptyWholeCart}
+        />
+      </ErrorBoundary>
     </Container>
   )
 }
