@@ -33,30 +33,36 @@ const CartView = ({
   updateCart,
 }: Props) => {
   return (
-    <CartWrapper isShown={showCart}>
+    <CartWrapper isShown={showCart} data-testid="cartWrapper">
       <div>
-        <SecondaryHeading>{messages.cartReview.title}</SecondaryHeading>
+        <SecondaryHeading data-testid="cartHeading">{messages.cartReview.title}</SecondaryHeading>
         {isEmpty ? (
-          <TextComponent>{messages.cartReview.emptyCart}</TextComponent>
+          <TextComponent data-testid="cartIsEmpty">{messages.cartReview.emptyCart}</TextComponent>
         ) : (
           <>
             {cart.map((item) => (
-              <CartItem key={item.productId}>
+              <CartItem key={item.productId} data-testid="cartItem">
                 <Row>
-                  <CartItemName>{item.productName}</CartItemName>
+                  <CartItemName data-testid="cartItemName">{item.productName}</CartItemName>
                   <DeleteButton
+                    data-testid="buttonDeleteItem"
                     aria-label={`${messages.cartReview.removeFromCartBtn} ${item.name}`}
                     onClick={() => removeFromCart(item.productId)}>
                     <DeleteIcon />
                   </DeleteButton>
                 </Row>
-                <CounterWrap item={item} messages={messages} updateCart={updateCart} />
+                <CounterWrap
+                  data-testid="counterWrap"
+                  item={item}
+                  messages={messages}
+                  updateCart={updateCart}
+                />
               </CartItem>
             ))}
-            <SecondaryHeading>
+            <SecondaryHeading data-testid="cartTotalPrice">
               {messages.cartReview.totalPrice} {totalPrice} {messages.cartReview.currency}
             </SecondaryHeading>
-            <DeleteButton deleteAll onClick={emptyWholeCart}>
+            <DeleteButton data-testid="buttonDeleteAll" deleteAll onClick={emptyWholeCart}>
               {messages.cartReview.removeAllItems}
             </DeleteButton>
           </>

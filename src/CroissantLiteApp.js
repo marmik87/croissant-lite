@@ -12,7 +12,6 @@ const CroissantLite = () => {
   const [query, setQuery] = useState('')
   const [isCartShown, setIsCartShown] = useState(false)
 
-  // useMemo used for component, maintain single function
   const updateCart = (item: Item, count: number) => {
     const itemFound = cart.find(({ productId }) => productId === item.productId)
 
@@ -30,7 +29,6 @@ const CroissantLite = () => {
     ])
   }
 
-  // useMemo used for component, maintain single function
   const removeAllItemsFromCart = (cartItemId: number) => {
     const filtered = cart.filter(({ productId }) => productId !== cartItemId)
 
@@ -64,7 +62,7 @@ const CroissantLite = () => {
     async function fetchData() {
       axios
         .get(REQUEST_SETTINGS.productsFile)
-        // TODO: handle response status codes
+        // in PROD need to handle response status codes
         .then((response) => {
           const productsFromResponse = parseProductsResponse(response)
           setProducts(productsFromResponse)
@@ -88,7 +86,7 @@ const CroissantLite = () => {
     localStorage.setItem(REQUEST_SETTINGS.localStorageName, JSON.stringify(cart))
   }, [cart])
 
-  // calling setting result only when the query is changed
+  // calling setting results only when the query is changed
   const searchResults = useMemo(() => {
     if (!products) {
       return []
@@ -101,19 +99,25 @@ const CroissantLite = () => {
   }, [query, products])
 
   return (
-    <Container>
+    <Container data-testid="container">
       <MenuBar
         searchedProduct={query}
         handleChange={handleChange}
         showCart={isCartShown}
         toggleCartShow={toggleShow}
       />
-      <ProductListWrapper isShown={isCartShown}>
+      <ProductListWrapper data-testid="productListWrapper" isShown={isCartShown}>
         {searchResults.map((item) => (
-          <Product key={item.productId} productData={item} addToCart={updateCart} />
+          <Product
+            data-testId="productItemWrapper"
+            key={item.productId}
+            productData={item}
+            addToCart={updateCart}
+          />
         ))}
       </ProductListWrapper>
       <CartView
+        data-testid="cartView"
         cart={cart}
         isEmpty={!cart.length}
         removeFromCart={removeAllItemsFromCart}

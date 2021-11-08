@@ -5,6 +5,7 @@ export const messages = {
     removeAllItems: 'Vysypat košík',
     removeBtn: 'Odebrat',
     removeFromCartBtn: 'Odebrat z košíku',
+    searchInput: 'Zadejte produkt, který chcete vyhledat',
     searchPlaceholder: 'Vyhledat produkt',
     title: 'Přehled objednávky',
     totalPrice: 'Celková cena',
@@ -16,4 +17,5 @@ export const messages = {
   },
   appName: "Croissant Lite",
   logoAriaLabel: "Logo of Croissant Lite App"
+
 }

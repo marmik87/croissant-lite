@@ -18,15 +18,16 @@ type Props = {
 }
 
 const MenuBar = ({ handleChange, searchedProduct = '', toggleCartShow }: Props) => (
-  <Navbar>
-    <Row nav>
-      <AppLogo src={croissant} alt={messages.logoAriaLabel}></AppLogo>
-      <Heading>{messages.appName}</Heading>
+  <Navbar data-testid="menuBar">
+    <Row nav data-testid="appNameLogoWrapper">
+      <AppLogo data-testid="appLogo" src={croissant} alt={messages.logoAriaLabel}></AppLogo>
+      <Heading data-testid="appName">{messages.appName}</Heading>
     </Row>
-    <Row nav>
+    <Row nav data-testid="searchWrapper">
       <label>
         <SearchIcon />
         <SearchInput
+          aria-label={messages.cartReview.searchInput}
           type="text"
           placeholder={messages.cartReview.searchPlaceholder}
           value={searchedProduct}
@@ -34,7 +35,7 @@ const MenuBar = ({ handleChange, searchedProduct = '', toggleCartShow }: Props) 
         />
       </label>
     </Row>
-    <Row nav>
+    <Row nav data-testid="toggleCartIcon">
       <ShoppingCartIcon onClick={toggleCartShow} />
     </Row>
   </Navbar>

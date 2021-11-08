@@ -12,12 +12,14 @@ const CounterWrap = ({ item, updateCart }: Props) => {
   return (
     <Row>
       <Button
+        data-testid="removeButton"
         aria-label={`${messages.amountCounter.removePiece} ${item.name}`}
         onClick={() => updateCart(item, -1)}>
         <RemoveIcon />
       </Button>
       <span>{item.qty}</span>
       <Button
+        data-testid="addButton"
         aria-label={`${messages.amountCounter.addPiece} ${item.name}`}
         onClick={() => updateCart(item, 1)}>
         <AddIcon />

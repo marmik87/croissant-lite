@@ -18,9 +18,10 @@ type Props = {
 const Product = ({ productData, addToCart }: Props) => {
   const formattedPrice = productData.price.full.toFixed(2)
   return (
-    <ProductItem>
+    <ProductItem data-testid="productItem">
       <Row>
         <ProductImage
+          data-testid="productImage"
           loading="lazy"
           src={`${imageApiUrl}${productData.imgPath}`}
           alt={productData.productName}
@@ -28,11 +29,14 @@ const Product = ({ productData, addToCart }: Props) => {
           height="300"
         />
       </Row>
-      <TextComponent>{productData.productName}</TextComponent>
-      <ProductPrice>
+      <TextComponent data-testid="productName">{productData.productName}</TextComponent>
+      <ProductPrice data-testid="product{rice">
         {formattedPrice} {productData.price.currency}
       </ProductPrice>
-      <Button inList onClick={() => addToCart(productData, 1)}>
+      <Button
+        aria-label={`${messages.amountCounter.addToCart} ${productData.productName}`}
+        inList
+        onClick={() => addToCart(productData, 1)}>
         {messages.amountCounter.addToCart}
       </Button>
     </ProductItem>
